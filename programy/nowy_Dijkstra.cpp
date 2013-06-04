@@ -3,13 +3,13 @@
 #include<queue>
 #include<utility>
 using namespace std;
+typedef pair<int,int> PII;
 int const infinity = 1000000000;
 int const M = 1000000; //max ilość wierzchołków
-
 int n, m, done[M], dist[M]; //n-wierzchołków, m-krawędzi
-queue<int> kolejka;
+priority_queue<PII, vector<PII>, greater<PII> > kolejka;
 
-vector<pair<int,int> > krawedz[M];
+vector<PII> krawedz[M];
 
 void Wczytaj(){
 	int c, d, e;
@@ -20,7 +20,7 @@ void Wczytaj(){
 	}
 }
 
-void Wypisz_krawedz(vector<pair<int,int> > x){
+void Wypisz_krawedz(vector<PII> x){
 	for(int j=0; j<x.size(); j++){
 		cout << x[j].first <<" "<<x[j].second<<" \n";
 	}
@@ -52,15 +52,23 @@ void Diksio(int s){
 		done[i] = 0;
 	}
 	dist[s] = 0;
-	for(int i = 0; i < n; i++){ 
-		int v = najmniejszy();
-	//	cout << "najmniejszy " << v << "\n";
-		for(int j = 0; j < krawedz[v].size(); j++){
-			int u = krawedz[v][j].second;
-			int dl = krawedz[v][j].first;
-			dist[u] = min(dist[u], dist[v]+dl);
+	kolejka.push(make_pair(dist[s], s));
+	int v;
+	while(!kolejka.empty()){ 
+		v = kolejka.top().second;
+		kolejka.pop();
+//		cout << " " << v << " ";
+		if(!done[v]){
+			done[v] = 1;
+			for(int j = 0; j < krawedz[v].size(); j++){
+				int u = krawedz[v][j].second;
+				int dl = krawedz[v][j].first;
+				if(dist[u] > dist[v]+dl){
+					dist[u] = dist[v]+dl;
+					kolejka.push(make_pair(dist[u], u));
+				}	
+			}
 		}
-		done[v] = 1;
 	}
 }
 
