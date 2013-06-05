@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
-#define MAXS 1000
+#define MAXS 1000000
 
 static int *queue;
 static int alfa;
